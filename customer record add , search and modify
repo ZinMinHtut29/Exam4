@@ -1,0 +1,202 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct CUSTOMER
+{
+	int amount;
+	int psw;
+	int no;
+
+	char name[10];
+
+};
+
+int main()
+{
+	void add();
+	void findlist();
+	void modify();
+
+	int a;
+
+
+	printf("\n\t\t\t\t========================================================\n");
+	printf("\n\t\t\t\t\t\t   CUSTOMER RECORD \n");
+	printf("\n\t\t\t\t\t\t   Created By Zin Min Htut \n");
+	printf("\n\t\t\t\t========================================================\n");
+
+		while(1)
+		{
+		printf("\n----------------------");
+		printf("\nchoose an option below");
+		printf("\n----------------------");
+		printf("\n1.Add a record");
+        printf("\n2.findlist customer record");
+        printf("\n3.modify customer a record");
+        printf("\n4.exit");
+		printf("\n----------------------\n");
+        scanf("%d",&a);
+		switch (a)
+		{
+			case 1:
+			{
+
+				add();
+				break;
+			}
+           case 2:
+			{
+
+				findlist();
+				break;
+			}
+           case 3:
+            {
+                void modify();
+                break;
+            }
+
+            case 4:
+			{
+				exit(0);
+			}
+
+		}
+	}
+
+}
+void add()
+{
+
+		struct CUSTOMER c;
+
+		FILE *fp = NULL;
+
+	 fp = fopen("customer_record.txt", "a");
+
+
+ 		printf("\n Enter customer no for record\n");
+		scanf("%d",&c.no);
+		printf(" Enter name\n");
+		scanf("%s",c.name);
+        printf(" Enter password \n");
+		scanf("%d",&c.psw);
+		printf(" Enter amount \n");
+		scanf("%d",&c.amount);
+
+		fprintf(fp,"%d %s %d %d \n",c.no,c.name,c.psw,c.amount);
+		if(fp != NULL)
+        {
+            fclose(fp);
+        }
+
+		printf("\n record successfully added");
+}
+
+
+void findlist()
+{
+FILE *fp;
+struct CUSTOMER c;
+int No,found=0;
+fp=fopen("customer_record.txt","r");
+printf("\nEnter the customer  no:");
+scanf("%d",&No);
+   if(fp == NULL){
+        printf("File opening error");
+        exit(0);
+
+    }
+while(1)
+{
+fread(&c,sizeof(c),1,fp);
+if(feof(fp))
+{
+break;
+}
+if(c.no==No)
+{
+found=1;
+printf("\n========================================================\n\n");
+printf("\t\t Customer Record of %d\n\n",c.no);
+printf("========================================================\n\n");
+
+		printf("no:%d\t",c.no);
+		printf("name:%s\t",c.name);
+		printf("password:%d\t",c.psw);
+		printf("amount:%d\n",c.amount);
+
+printf("========================================================\n\n");
+}
+}
+if(found==0)
+{
+printf("\nSorry No Record Found");
+}
+fclose(fp);
+}
+
+void modify()
+{
+FILE *fp,*fp1;
+struct CUSTOMER c;
+int No,found=0;
+
+fp=fopen("customer_record.txt","r");
+fp1=fopen("temp.txt","w");
+
+printf("\nEnter customer no you want to Modify:");
+scanf("%d",&No);
+
+while(1)
+{
+fread(&c,sizeof(c),1,fp);
+
+if(feof(fp))
+{
+break;
+}
+if(c.no==No)
+{
+found=1;
+		printf("enter  no for modify customer record\n");
+		scanf("%d",&c.no);
+        printf("no:%d\t",c.no);
+		printf("name:%s\t",c.name);
+		printf("password:%d\t",c.psw);
+		printf("amount:%d\n",c.amount);
+
+fwrite(&c,sizeof(c),1,fp1);
+}
+else
+{
+fwrite(&c,sizeof(c),1,fp1);
+}
+}
+fclose(fp);
+fclose(fp1);
+
+if(found==0)
+{
+printf("Sorry No Customer Record Found\n\n");
+}
+else
+{
+fp=fopen("customer_record.txt","a");
+fp1=fopen("temp.txt","r");
+
+while(1)
+{
+fread(&c,sizeof(c),1,fp1);
+
+if(feof(fp1))
+{
+break;
+}
+fwrite(&c,sizeof(c),1,fp);
+}
+
+}
+fclose(fp);
+fclose(fp1);
+}
